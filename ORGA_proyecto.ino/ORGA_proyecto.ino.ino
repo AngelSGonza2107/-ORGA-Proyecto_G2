@@ -189,8 +189,316 @@ void loop() {
 
   seleccionForma1 = digitalRead(forma1);  // lectura de estado de señal de forma 1
   seleccionForma2 = digitalRead(forma2);  // lectura de estado de señal de forma 2
+  //  ------------- FORMA TRIANGULO ------------------------
+  if (seleccionForma1 == LOW && seleccionForma2 == LOW) {
+    //  POSICIONANDO HOJA PARA EMPEZAR A DIBUJAR
 
-  // put your main code here, to run repeatedly:
+    moverDer(margen);
+
+    moverAbajo(ciclosPorCoordenada - margen);
+
+    // SE BAJA SERVO PARA DIBUJAR
+    servo1.write(180);
+    moverDer(ciclosPorCoordenada - 2 * margen);
+
+    for (int i = 0; i < ciclosPorCoordenada / 2 - margen; i++)  // 512*4 = 2048 pasos
+    {
+      for (int j = 0; j < 4; j++)  // bucle recorre la matriz de a una fila por vez
+      {                            // para obtener los valores logicos a aplicar
+        if (j % 2 == 0) {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, pasoInv[0][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[0][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, pasoInv[0][2]);
+          digitalWrite(INB4, pasoInv[0][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, pasoInv[1][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[1][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, pasoInv[1][2]);
+          digitalWrite(INB4, pasoInv[1][3]);
+          delay(demora);
+        } else {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, pasoInv[2][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[2][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, pasoInv[2][2]);
+          digitalWrite(INB4, pasoInv[2][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, pasoInv[3][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[3][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, pasoInv[3][2]);
+          digitalWrite(INB4, pasoInv[3][3]);
+          delay(demora);
+        }
+      }
+    }
+    digitalWrite(INA1, LOW);  // detiene
+    digitalWrite(INA2, LOW);
+    digitalWrite(INA3, LOW);
+    digitalWrite(INA4, LOW);
+    for (int i = 0; i < ciclosPorCoordenada / 2 - margen; i++)  // 512*4 = 2048 pasos
+    {
+      for (int j = 0; j < 4; j++)  // bucle recorre la matriz de a una fila por vez
+      {                            // para obtener los valores logicos a aplicar
+        if (j % 2 == 0) {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, paso[0][0]);     // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[0][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, paso[0][2]);
+          digitalWrite(INB4, paso[0][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, paso[1][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[1][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, paso[1][2]);
+          digitalWrite(INB4, paso[1][3]);
+          delay(demora);
+        } else {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, paso[2][0]);     // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[2][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, paso[2][2]);
+          digitalWrite(INB4, paso[2][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, paso[3][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[3][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, paso[3][2]);
+          digitalWrite(INB4, paso[3][3]);
+          delay(demora);
+        }
+      }
+    }
+    digitalWrite(INA1, LOW);  // detiene
+    digitalWrite(INA2, LOW);
+    digitalWrite(INA3, LOW);
+    digitalWrite(INA4, LOW);
+
+    //  SE DEVUELVE HOJA A POSICION INICIAL
+    servo1.write(0);
+     moverDer(margen);
+
+    moverAbajo(ciclosPorCoordenada - margen);
+    moverArriba(margen);
+    moverIzq(ciclosPorCoordenada - margen);
+  }
+
+  //  ------------- FORMA X ------------------------
+  if (seleccionForma1 == LOW && seleccionForma2 == HIGH) {
+    //  POSICIONANDO HOJA PARA EMPEZAR A DIBUJAR
+    moverDer(margen);
+    moverAbajo(margen);
+
+    // SE BAJA SERVO PARA DIBUJAR
+    servo1.write(180);
+
+    for (int i = 0; i < ciclosPorCoordenada - 2 * margen; i++)  // 512*4 = 2048 pasos
+    {
+      for (int j = 0; j < 4; j++)        // bucle recorre la matriz de a una fila por vez
+      {                                  // para obtener los valores logicos a aplicar
+        digitalWrite(INA1, paso[j][0]);  // a IN1, IN2, IN3 e IN4
+        digitalWrite(INB1, paso[j][0]);
+        digitalWrite(INA2, paso[j][1]);
+        digitalWrite(INB2, paso[j][1]);
+        digitalWrite(INA3, paso[j][2]);
+        digitalWrite(INB3, paso[j][2]);
+        digitalWrite(INA4, paso[j][3]);
+        digitalWrite(INB4, paso[j][3]);
+        delay(demora);
+      }
+    }
+    servo1.write(0);
+
+    digitalWrite(INA1, LOW);  // detiene
+    digitalWrite(INA2, LOW);
+    digitalWrite(INA3, LOW);
+    digitalWrite(INA4, LOW);
+
+    moverIzq(ciclosPorCoordenada - 2 * margen);
+
+
+    servo1.write(180);
+    for (int i = 0; i < ciclosPorCoordenada - 2 * margen; i++)  // 512*4 = 2048 pasos
+    {
+      for (int j = 0; j < 4; j++)        // bucle recorre la matriz de a una fila por vez
+      {                                  // para obtener los valores logicos a aplicar
+        digitalWrite(INA1, paso[j][0]);  // a IN1, IN2, IN3 e IN4
+        digitalWrite(INB1, pasoInv[j][0]);
+        digitalWrite(INA2, paso[j][1]);
+        digitalWrite(INB2, pasoInv[j][1]);
+        digitalWrite(INA3, paso[j][2]);
+        digitalWrite(INB3, pasoInv[j][2]);
+        digitalWrite(INA4, paso[j][3]);
+        digitalWrite(INB4, pasoInv[j][3]);
+        delay(demora);
+      }
+    }
+    servo1.write(0);
+
+    digitalWrite(INA1, LOW);  // detiene
+    digitalWrite(INA2, LOW);
+    digitalWrite(INA3, LOW);
+    digitalWrite(INA4, LOW);
+
+    // SE DEVUELVE A POSICION INICIAL
+    moverIzq(ciclosPorCoordenada - margen);
+
+    moverArriba(margen);
+  }
+
+
+  //  ------------------ FORMA CIRCULO------------------------------
+ 
+  if (seleccionForma1 == HIGH && seleccionForma2 == LOW) {
+    int radio = ciclosPorCoordenada / 2 - margen;
+    moverDer(ciclosPorCoordenada / 2);
+    servo1.write(180);
+    int posAnterior = 0;
+    for (int i = 5; i < ciclosPorCoordenada / 2 - margen; i += 5) {
+      int posX = ciclosPorCoordenada / 2 - i;
+      int posY = ((2 * radio + sqrt(4 * sq(radio) - 4 * (sq(posX) - 2 * posX * radio + sq(radio)))) / 2);
+      moverIzq(5);
+      moverAbajo(posY - posAnterior);
+      posAnterior = posY;
+    }
+
+    int posAnterior1 = ciclosPorCoordenada / 2 - margen;
+    for (int i = 5; i < ciclosPorCoordenada / 2 - margen; i += 5) {
+      int posX = i;
+      int posY = ((2 * radio + sqrt(4 * sq(radio) - 4 * (sq(posX) - 2 * posX * radio + sq(radio)))) / 2);
+      moverDer(5);
+      moverAbajo(posY - posAnterior1);
+      posAnterior1 = posY;
+    }
+
+    int posAnterior2 = radio;
+    for (int i = 5; i < ciclosPorCoordenada / 2 - margen; i += 5) {
+      int posX = ciclosPorCoordenada / 2 + i;
+      int posY = ((2 * radio + sqrt(4 * sq(radio) - 4 * (sq(posX) - 2 * posX * radio + sq(radio)))) / 2);
+      moverDer(5);
+      moverArriba(-posY + posAnterior2);
+      posAnterior2 = posY;
+    }
+
+    int posAnterior3 = ciclosPorCoordenada / 2 - margen;
+    for (int i = 5; i < ciclosPorCoordenada / 2 - margen; i += 5) {
+      int posX = ciclosPorCoordenada - i;
+      int posY = ((2 * radio + sqrt(4 * sq(radio) - 4 * (sq(posX) - 2 * posX * radio + sq(radio)))) / 2);
+      moverIzq(5);
+      moverArriba(-posY + posAnterior3);
+      posAnterior3 = posY;
+    }
+    servo1.write(0);
+  }
+
+  /// DIBUJO ESTRELLA
+
+  if (seleccionForma1 == HIGH && seleccionForma2 == HIGH) {
+    moverDer(margen);
+
+    moverAbajo(((ciclosPorCoordenada - 2 * margen) * 2 / 3));
+
+    // SE BAJA SERVO PARA DIBUJAR
+    servo1.write(180);
+    moverDer(ciclosPorCoordenada - 2 * margen);
+
+    for (int i = 4; i < ciclosPorCoordenada / 2 - margen; i += 4)  // 512*4 = 2048 pasos
+    {
+      for (int j = 0; j < 4; j++)  // bucle recorre la matriz de a una fila por vez
+      {                            // para obtener los valores logicos a aplicar
+        if (j % 2 == 0) {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, pasoInv[0][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[0][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, pasoInv[0][2]);
+          digitalWrite(INB4, pasoInv[0][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, pasoInv[1][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[1][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, pasoInv[1][2]);
+          digitalWrite(INB4, pasoInv[1][3]);
+          delay(demora);
+        } else {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, pasoInv[2][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[2][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, pasoInv[2][2]);
+          digitalWrite(INB4, pasoInv[2][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, pasoInv[3][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, pasoInv[3][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, pasoInv[3][2]);
+          digitalWrite(INB4, pasoInv[3][3]);
+          delay(demora);
+        }
+      }
+    }
+    digitalWrite(INA1, LOW);  // detiene
+    digitalWrite(INA2, LOW);
+    digitalWrite(INA3, LOW);
+    digitalWrite(INA4, LOW);
+    for (int i = 0; i < ciclosPorCoordenada / 2 - margen; i++)  // 512*4 = 2048 pasos
+    {
+      for (int j = 0; j < 4; j++)  // bucle recorre la matriz de a una fila por vez
+      {                            // para obtener los valores logicos a aplicar
+        if (j % 2 == 0) {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, paso[0][0]);     // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[0][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, paso[0][2]);
+          digitalWrite(INB4, paso[0][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, paso[1][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[1][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, paso[1][2]);
+          digitalWrite(INB4, paso[1][3]);
+          delay(demora);
+        } else {
+          digitalWrite(INA1, pasoInv[j][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB1, paso[2][0]);     // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[2][1]);
+          digitalWrite(INA2, pasoInv[j][1]);
+          digitalWrite(INB3, paso[2][2]);
+          digitalWrite(INB4, paso[2][3]);
+          digitalWrite(INA3, pasoInv[j][2]);
+          delay(demora);
+          digitalWrite(INB1, paso[3][0]);  // a IN1, IN2, IN3 e IN4
+          digitalWrite(INB2, paso[3][1]);
+          digitalWrite(INA4, pasoInv[j][3]);
+          digitalWrite(INB3, paso[3][2]);
+          digitalWrite(INB4, paso[3][3]);
+          delay(demora);
+        }
+      }
+    }
+    digitalWrite(INA1, LOW);  // detiene
+    digitalWrite(INA2, LOW);
+    digitalWrite(INA3, LOW);
+    digitalWrite(INA4, LOW);
+
+    //  SE DEVUELVE HOJA A POSICION INICIAL
+    moverArriba(margen);
+    moverIzq(ciclosPorCoordenada / 2 - margen);
+  }
   //PULSO DIBUJO TERMINADO
   servo1.write(0);
   digitalWrite(ciclosCoordenadas, HIGH);
